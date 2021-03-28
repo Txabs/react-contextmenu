@@ -25,6 +25,7 @@ declare module "react-contextmenu" {
         renderTag?: React.ElementType,
         mouseButton?: number,
         disableIfShiftIsPressed?: boolean,
+        cancelShowMenuIfTouchMoved?: boolean,
         [key: string]: any
     }
 

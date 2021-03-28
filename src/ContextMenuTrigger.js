@@ -18,7 +18,8 @@ export default class ContextMenuTrigger extends Component {
         posY: PropTypes.number,
         renderTag: PropTypes.elementType,
         mouseButton: PropTypes.number,
-        disableIfShiftIsPressed: PropTypes.bool
+        disableIfShiftIsPressed: PropTypes.bool,
+        cancelShowMenuIfTouchMoved: PropTypes.bool
     };
 
     static defaultProps = {
@@ -30,7 +31,8 @@ export default class ContextMenuTrigger extends Component {
         posX: 0,
         posY: 0,
         mouseButton: 2, // 0 is left click, 2 is right click
-        disableIfShiftIsPressed: false
+        disableIfShiftIsPressed: false,
+        cancelShowMenuIfTouchMoved: true
     };
 
     touchHandled = false;
@@ -86,6 +88,16 @@ export default class ContextMenuTrigger extends Component {
         }
         clearTimeout(this.touchstartTimeoutId);
         callIfExists(this.props.attributes.onTouchEnd, event);
+    }
+
+    handleTouchMove = (event) => {
+        if (!this.props.cancelShowMenuIfTouchMoved) return;
+
+        if (this.touchHandled) {
+            event.preventDefault();
+        }
+        clearTimeout(this.touchstartTimeoutId);
+        callIfExists(this.props.attributes.onTouchMove, event);
     }
 
     handleContextMenu = (event) => {
@@ -157,6 +169,7 @@ export default class ContextMenuTrigger extends Component {
             onMouseUp: this.handleMouseUp,
             onTouchStart: this.handleTouchstart,
             onTouchEnd: this.handleTouchEnd,
+            onTouchMove: this.handleTouchMove,
             onMouseOut: this.handleMouseOut,
             ref: this.elemRef
         });
