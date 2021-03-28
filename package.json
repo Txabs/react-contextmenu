@@ -1,6 +1,6 @@
 {
   "name": "react-contextmenu",
-  "version": "2.14.0",
+  "version": "2.15.0",
   "description": "Context Menu implemented in React",
   "main": "modules/index.js",
   "module": "es6/index.js",
@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "lint": "eslint ./src ./examples",
-    "test": "npm run lint && npm run test:only",
+    "test": "npm run lint",
     "test:only": "jest --no-cache --verbose --coverage",
     "test:dev": "jest --watchAll --no-cache --verbose --coverage",
     "clean": "rimraf ./dist && rimraf ./modules && rimraf ./es6",
