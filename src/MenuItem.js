@@ -28,12 +28,14 @@ export default class MenuItem extends Component {
         data: {},
         disabled: false,
         divider: false,
-        onClick() { return null; },
-        onMouseMove: () => null,
+        onClick: () => null,
         onMouseLeave: () => null,
+        onMouseMove: () => null,
         preventClose: false,
         selected: false
     };
+
+    isPanning = false;
 
     handleClick = (event) => {
         if (event.button !== 0 && event.button !== 1) {
@@ -41,6 +43,35 @@ export default class MenuItem extends Component {
         }
 
         if (this.props.disabled || this.props.divider) return;
+
+        callIfExists(
+            this.props.onClick,
+            event,
+            assign({}, this.props.data, store.data),
+            store.target
+        );
+
+        if (this.props.preventClose) return;
+
+        hideMenu();
+    }
+
+    handleTouchStart = () => {
+        this.isPanning = false;
+    }
+
+    handleTouchMove = () => {
+        this.isPanning = true;
+    }
+
+    handleTouchEnd = (event) => {
+        if (event.button !== 0 && event.button !== 1) {
+            if (event.cancelable) event.preventDefault();
+        }
+
+        if (this.props.disabled || this.props.divider || this.isPanning) return;
+
+        this.isPanning = false;
 
         callIfExists(
             this.props.onClick,
@@ -77,12 +108,19 @@ export default class MenuItem extends Component {
 
         return (
             <div
-                {...attributes} className={menuItemClassNames}
-                role='menuitem' tabIndex='-1' aria-disabled={disabled ? 'true' : 'false'}
+                {...attributes}
+                className={menuItemClassNames}
+                role='menuitem'
+                tabIndex='-1'
+                aria-disabled={disabled ? 'true' : 'false'}
                 aria-orientation={divider ? 'horizontal' : null}
                 ref={(ref) => { this.ref = ref; }}
-                onMouseMove={this.props.onMouseMove} onMouseLeave={this.props.onMouseLeave}
-                onTouchEnd={this.handleClick} onClick={this.handleClick}>
+                onClick={this.handleClick}
+                onMouseLeave={this.props.onMouseLeave}
+                onMouseMove={this.props.onMouseMove}
+                onTouchEnd={this.handleTouchEnd}
+                onTouchMove={this.handleTouchMove}
+                onTouchStart={this.handleTouchStart}>
                 {divider ? null : children}
             </div>
         );

@@ -19,7 +19,7 @@ declare module "dow-react-contextmenu" {
     export interface ContextMenuTriggerProps {
         id: string,
         attributes?: React.HTMLAttributes<any>,
-        collect?: {(data: any): any},
+        collect?: {(data: Record<string, unknown>): unknown},
         disable?: boolean,
         holdToDisplay?: number,
         renderTag?: React.ElementType,
